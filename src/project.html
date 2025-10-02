@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ordering System Dashboard</title>
+    <style>
+      /* Reset & Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        display: flex;
+        min-height: 100vh;
+        background-color: #f5f7fa;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: 250px;
+        background-color: #2c3e50;
+        color: white;
+        padding: 20px 0;
+        height: 100vh;
+        position: fixed;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        text-align: center;
+        padding: 20px 0 30px;
+        border-bottom: 1px solid #3a506b;
+        margin-bottom: 20px;
+      }
+
+      .logo h2 {
+        color: #fff;
+        font-size: 1.5rem;
+      }
+
+      .tabs {
+        padding: 0 15px;
+      }
+
+      .tab {
+        margin-bottom: 5px;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .tab-header {
+        padding: 12px 15px;
+        background-color: #34495e;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 500;
+        transition: background-color 0.3s;
+      }
+
+      .tab-header:hover {
+        background-color: #3d566e;
+      }
+
+      .tab-header.active {
+        background-color: #3498db;
+      }
+
+      .sub-tabs {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background-color: #2c3e50;
+      }
+
+      .sub-tab {
+        padding: 10px 15px 10px 30px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .sub-tab:hover {
+        background-color: #3a506b;
+      }
+
+      .sub-tab.active {
+        background-color: #2980b9;
+        border-left: 3px solid #fff;
+      }
+
+      /* Main Content Styles */
+      .main-content {
+        flex: 1;
+        margin-left: 250px;
+        padding: 20px;
+      }
+
+      .header {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+      }
+
+      .content-area {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        min-height: calc(100vh - 150px);
+      }
+
+      /* Order Form Styles */
+      .order-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color 0.2s;
+      }
+
+      .btn-primary {
+        background-color: #3498db;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #2980b9;
+      }
+
+      /* Order List Styles */
+      .order-list {
+        margin-top: 20px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .order-list-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 100px;
+        background-color: #f8f9fa;
+        font-weight: 600;
+        padding: 10px 15px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .order-item {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 100px;
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+        align-items: center;
+      }
+
+      .order-item:last-child {
+        border-bottom: none;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+        .main-content {
+          margin-left: 0;
+        }
+        .order-form {
+          grid-template-columns: 1fr;
+        }
+        .order-list-header,
+        .order-item {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <h2>Ordering System</h2>
+      </div>
+      <div class="tabs">
+        <!-- FIFO Tab -->
+        <div class="tab">
+          <div class="tab-header" onclick="toggleTab('fifo')">
+            <span>FIFO</span>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="sub-tabs" id="fifo-tabs">
+            <div class="sub-tab" onclick="showContent('fifo1')">Feature 1</div>
+            <div class="sub-tab" onclick="showContent('fifo2')">Feature 2</div>
+            <div class="sub-tab" onclick="showContent('fifo3')">Feature 3</div>
+          </div>
+        </div>
+
+        <!-- LIFO Tab -->
+        <div class="tab">
+          <div class="tab-header" onclick="toggleTab('lifo')">
+            <span>LIFO</span>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="sub-tabs" id="lifo-tabs">
+            <div class="sub-tab" onclick="showContent('lifo1')">Feature 1</div>
+            <div class="sub-tab" onclick="showContent('lifo2')">Feature 2</div>
+            <div class="sub-tab" onclick="showContent('lifo3')">Feature 3</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <h1 id="content-title">Dashboard</h1>
+      </div>
+
+      <div class="content-area" id="content-area">
+        <!-- Content will be dynamically loaded here -->
+        <p>Select a feature from the sidebar to get started.</p>
+      </div>
+    </div>
+
+    <script>
+      // Toggle tab visibility
+      function toggleTab(tabId) {
+        const tab = document.getElementById(`${tabId}-tabs`);
+        const header = event.currentTarget;
+
+        // Toggle active class on header
+        header.classList.toggle("active");
+
+        // Toggle sub-tabs visibility
+        if (tab.style.maxHeight) {
+          tab.style.maxHeight = null;
+          header.querySelector(".arrow").textContent = "▼";
+        } else {
+          tab.style.maxHeight = tab.scrollHeight + "px";
+          header.querySelector(".arrow").textContent = "▲";
+        }
+      }
+
+      // Show content based on selection
+      function showContent(contentId) {
+        const contentArea = document.getElementById("content-area");
+        const title = document.getElementById("content-title");
+
+        // Remove active class from all sub-tabs
+        document.querySelectorAll(".sub-tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+
+        // Add active class to selected sub-tab
+        event.currentTarget.classList.add("active");
+
+        // Update title
+        const [method, feature] = contentId.match(/(fifo|lifo)(\d+)/i).slice(1);
+        title.textContent = `${method.toUpperCase()} - Feature ${feature}`;
+
+        // Generate dynamic content based on selection
+        let content = `
+                <h2>${method.toUpperCase()} - Feature ${feature}</h2>
+                <div class="order-form">
+                    <div class="form-group">
+                        <label for="order-${contentId}">Order Item</label>
+                        <input type="text" id="order-${contentId}" placeholder="Enter item name">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity-${contentId}">Quantity</label>
+                        <input type="number" id="quantity-${contentId}" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-primary" onclick="addOrder('${method}')">Add Order</button>
+                    </div>
+                </div>
+                <div class="order-list" id="order-list-${method}">
+                    <div class="order-list-header">
+                        <div>Item</div>
+                        <div>Quantity</div>
+                        <div>Time</div>
+                        <div>Action</div>
+                    </div>
+                    <!-- Orders will be added here -->
+                </div>
+            `;
+
+        contentArea.innerHTML = content;
+      }
+
+      // Add order to the list
+      function addOrder(method) {
+        const itemInput = document.querySelector(`#order-${method}1`);
+        const quantityInput = document.querySelector(`#quantity-${method}1`);
+        const orderList = document.getElementById(`order-list-${method}`);
+
+        if (!itemInput.value.trim()) {
+          alert("Please enter an item name");
+          return;
+        }
+
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+
+        const orderItem = document.createElement("div");
+        orderItem.className = "order-item";
+        orderItem.innerHTML = `
+                <div>${itemInput.value}</div>
+                <div>${quantityInput.value}</div>
+                <div>${timeString}</div>
+                <div><button class="btn" onclick="processOrder(this, '${method}')">Process</button></div>
+            `;
+
+        if (method === "fifo") {
+          orderList.appendChild(orderItem);
+        } else {
+          // For LIFO, insert at the beginning
+          const firstItem = orderList.querySelector(".order-item");
+          if (firstItem) {
+            orderList.insertBefore(orderItem, firstItem);
+          } else {
+            orderList.appendChild(orderItem);
+          }
+        }
+
+        // Clear inputs
+        itemInput.value = "";
+        quantityInput.value = "1";
+      }
+
+      // Process order (FIFO or LIFO)
+      function processOrder(button, method) {
+        const orderItem = button.closest(".order-item");
+        const itemName = orderItem.querySelector("div:first-child").textContent;
+
+        // Here you would typically send this to your backend
+        alert(`Processing ${method.toUpperCase()} order: ${itemName}`);
+
+        // Remove the processed order
+        orderItem.remove();
+
+        // Show a message if no more orders
+        const orderList = document.getElementById(`order-list-${method}`);
+        if (orderList.querySelectorAll(".order-item").length === 0) {
+          orderList.innerHTML += `
+                    <div class="order-item" style="text-align: center; grid-column: 1 / -1; padding: 20px;">
+                        No orders in the queue
+                    </div>
+                `;
+        }
+      }
+
+      // Initialize the first tab as open by default
+      document.addEventListener("DOMContentLoaded", function () {
+        const fifoTab = document.querySelector(".tab-header");
+        const fifoTabs = document.getElementById("fifo-tabs");
+        fifoTab.classList.add("active");
+        fifoTabs.style.maxHeight = fifoTabs.scrollHeight + "px";
+      });
+    </script>
+  </body>
+</html>
