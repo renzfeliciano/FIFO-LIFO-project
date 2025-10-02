@@ -3,395 +3,898 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ordering System Dashboard</title>
+    <title>Joe Bean's Cafe Dashboard</title>
     <style>
-      /* Reset & Base Styles */
+      /* ===================== Reset & Base ===================== */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: Arial, sans-serif;
       }
-
       body {
         display: flex;
-        min-height: 100vh;
-        background-color: #f5f7fa;
-      }
-
-      /* Sidebar Styles */
-      .sidebar {
-        width: 250px;
-        background-color: #2c3e50;
-        color: white;
-        padding: 20px 0;
         height: 100vh;
-        position: fixed;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #f5f5dc;
+        color: #333;
       }
 
-      .logo {
-        text-align: center;
-        padding: 20px 0 30px;
-        border-bottom: 1px solid #3a506b;
-        margin-bottom: 20px;
-      }
-
-      .logo h2 {
-        color: #fff;
-        font-size: 1.5rem;
-      }
-
-      .tabs {
-        padding: 0 15px;
-      }
-
-      .tab {
-        margin-bottom: 5px;
-        border-radius: 5px;
-        overflow: hidden;
-      }
-
-      .tab-header {
-        padding: 12px 15px;
-        background-color: #34495e;
-        cursor: pointer;
+      /* ===================== Sidebar ===================== */
+      .sidebar {
+        width: 220px;
+        background-color: #4b2e2e;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: center;
-        font-weight: 500;
-        transition: background-color 0.3s;
+        padding: 20px 10px;
+        transition: all 0.3s ease;
       }
-
-      .tab-header:hover {
-        background-color: #3d566e;
+      .logo {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 40px;
+        border: 3px solid #faf3e0;
       }
-
-      .tab-header.active {
-        background-color: #3498db;
-      }
-
-      .sub-tabs {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-        background-color: #2c3e50;
-      }
-
-      .sub-tab {
-        padding: 10px 15px 10px 30px;
+      .sidebar button {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
         cursor: pointer;
-        transition: background-color 0.2s;
+        background-color: #faf3e0;
+        color: #4b2e2e;
+        transition: 0.2s ease;
+      }
+      .sidebar button:hover {
+        background-color: #e6d7c0;
       }
 
-      .sub-tab:hover {
-        background-color: #3a506b;
+      /* ===================== Topbar ===================== */
+      .topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background-color: #4b2e2e;
+        color: #faf3e0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        z-index: 10;
       }
 
-      .sub-tab.active {
-        background-color: #2980b9;
-        border-left: 3px solid #fff;
+      .topbar button {
+        background: none;
+        border: none;
+        color: #faf3e0;
+        font-size: 18px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .topbar-title {
+        font-size: 20px;
+        font-weight: bold;
       }
 
-      /* Main Content Styles */
-      .main-content {
-        flex: 1;
-        margin-left: 250px;
-        padding: 20px;
-      }
-
-      .header {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      /* ===================== Menu Tabs ===================== */
+      .menu-tabs {
+        display: flex;
+        gap: 10px;
         margin-bottom: 20px;
+        flex-wrap: wrap;
+        background: #fff8f0;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       }
 
-      .content-area {
-        background-color: white;
-        padding: 20px;
+      .menu-tabs button {
+        padding: 10px 20px;
+        border: none;
         border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        min-height: calc(100vh - 150px);
+        background-color: #e6d7c0;
+        color: #4b2e2e;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
       }
 
-      /* Order Form Styles */
-      .order-form {
+      .menu-tabs button:hover {
+        background-color: #d4c5b0;
+      }
+
+      .menu-tabs button.active {
+        background-color: #4b2e2e;
+        color: #faf3e0;
+      }
+
+      /* ===================== Main Content ===================== */
+      .main {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+        background-color: #f5f5dc;
+      }
+      .header {
+        font-size: 28px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: #4b2e2e;
+      }
+      .cards {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 20px;
       }
+      .card {
+        background-color: #fff8f0;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      .card h3 {
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #4b2e2e;
+      }
+      .card p {
+        font-size: 14px;
+        color: #555;
+      }
 
-      .form-group {
+      /* ===================== Menu Grid ===================== */
+      .menu-category {
+        margin-bottom: 40px;
+        display: none;
+      }
+
+      .menu-category.active {
+        display: block;
+      }
+
+      .menu-category h2 {
+        font-size: 24px;
+        color: #4b2e2e;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #e6d7c0;
+        padding-bottom: 5px;
+      }
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+      }
+
+      .menu-item {
+        background: #fff8f0;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+      }
+      .menu-item:hover {
+        transform: scale(1.05);
+      }
+      .menu-item img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 10px;
+      }
+
+      .menu-item h3 {
+        font-size: 18px;
+        color: #4b2e2e;
+        margin-bottom: 5px;
+      }
+      .menu-item span {
+        font-weight: bold;
+        color: #4b2e2e;
+        display: block;
+        margin: 5px 0;
+      }
+
+      .menu-item button {
+        padding: 8px 16px;
+        background: #8b6f47;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s ease;
+      }
+
+      .menu-item button:hover {
+        background: #6f4e37;
+        transform: scale(1.05);
+      }
+
+      /* ===================== Order Layout ===================== */
+      .order-container {
+        display: flex;
+        gap: 20px;
+      }
+      .menu-section {
+        flex: 3;
+      }
+      .history-section {
+        flex: 1;
+        background: #fff3e6;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 20px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      .history-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0;
+      }
+      .history-section button {
+        width: 100%;
+        padding: 10px;
+        background: #a0522d;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .history-section button:hover {
+        background: #7b3f1e;
+      }
+
+      /* ===================== Modal ===================== */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: #fff8f0;
+        padding: 25px;
+        border-radius: 12px;
+        width: 400px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        color: #4b2e2e;
+      }
+
+      .modal-content h2 {
         margin-bottom: 15px;
       }
 
-      .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: 500;
+      .modal-content ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 15px 0;
       }
 
-      .form-group input,
-      .form-group select {
-        width: 100%;
-        padding: 8px 12px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 14px;
+      .modal-content li {
+        margin-bottom: 8px;
       }
 
-      .btn {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: background-color 0.2s;
-      }
-
-      .btn-primary {
-        background-color: #3498db;
-        color: white;
-      }
-
-      .btn-primary:hover {
-        background-color: #2980b9;
-      }
-
-      /* Order List Styles */
-      .order-list {
-        margin-top: 20px;
-        border: 1px solid #eee;
-        border-radius: 4px;
-        overflow: hidden;
-      }
-
-      .order-list-header {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 100px;
-        background-color: #f8f9fa;
-        font-weight: 600;
+      .modal-buttons button {
         padding: 10px 15px;
-        border-bottom: 1px solid #eee;
+        margin: 5px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
       }
 
-      .order-item {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 100px;
-        padding: 12px 15px;
-        border-bottom: 1px solid #eee;
-        align-items: center;
+      .modal-buttons button:first-child {
+        background-color: #4b2e2e;
+        color: #fff;
       }
 
-      .order-item:last-child {
-        border-bottom: none;
+      .modal-buttons button:first-child:hover {
+        background-color: #6f4e37;
       }
 
-      /* Responsive */
-      @media (max-width: 768px) {
-        .sidebar {
-          width: 100%;
-          height: auto;
-          position: relative;
-        }
-        .main-content {
-          margin-left: 0;
-        }
-        .order-form {
-          grid-template-columns: 1fr;
-        }
-        .order-list-header,
-        .order-item {
-          grid-template-columns: 1fr 1fr;
-        }
+      .modal-buttons button:last-child {
+        background-color: #faf3e0;
+        color: #4b2e2e;
+      }
+
+      .modal-buttons button:last-child:hover {
+        background-color: #e6d7c0;
+      }
+
+      .close {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        font-size: 22px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #4b2e2e;
       }
     </style>
   </head>
   <body>
     <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="logo">
-        <h2>Ordering System</h2>
-      </div>
-      <div class="tabs">
-        <!-- FIFO Tab -->
-        <div class="tab">
-          <div class="tab-header" onclick="toggleTab('fifo')">
-            <span>FIFO</span>
-            <span class="arrow">▼</span>
-          </div>
-          <div class="sub-tabs" id="fifo-tabs">
-            <div class="sub-tab" onclick="showContent('fifo1')">Feature 1</div>
-            <div class="sub-tab" onclick="showContent('fifo2')">Feature 2</div>
-            <div class="sub-tab" onclick="showContent('fifo3')">Feature 3</div>
-          </div>
+    <div class="sidebar" id="sidebar">
+      <img src="Logo.JPG" alt="Cafe Logo" class="logo" />
+      <button onclick="openPanel('ORDER')">ORDER</button>
+      <button onclick="openPanel('QUEUE')">QUEUE</button>
+      <button onclick="openPanel('SALES')">SALES</button>
+    </div>
+
+    <!-- Topbar -->
+    <div class="topbar" id="topbar">
+      <button onclick="goBack()">← Back</button>
+      <span class="topbar-title" id="panelTitle">Panel</span>
+      <span></span>
+    </div>
+
+    <!-- Main -->
+    <div class="main" id="mainContent"></div>
+
+    <!-- Order Summary Modal -->
+    <div id="orderModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>🛒 Order Summary</h2>
+        <ul id="modal-order-list"></ul>
+        <p>
+          <strong>Total: ₱<span id="modal-total">0</span></strong>
+        </p>
+
+        <!-- Payment Input -->
+        <div style="margin: 15px 0">
+          <label for="payment-amount">Enter Payment Amount: ₱</label>
+          <input
+            type="number"
+            id="payment-amount"
+            min="0"
+            placeholder="0"
+            style="
+              width: 100px;
+              padding: 5px;
+              border-radius: 6px;
+              border: 1px solid #ccc;
+            "
+          />
+          <p
+            id="payment-error"
+            style="color: red; margin-top: 5px; display: none"
+          >
+            Insufficient payment!
+          </p>
         </div>
 
-        <!-- LIFO Tab -->
-        <div class="tab">
-          <div class="tab-header" onclick="toggleTab('lifo')">
-            <span>LIFO</span>
-            <span class="arrow">▼</span>
-          </div>
-          <div class="sub-tabs" id="lifo-tabs">
-            <div class="sub-tab" onclick="showContent('lifo1')">Feature 1</div>
-            <div class="sub-tab" onclick="showContent('lifo2')">Feature 2</div>
-            <div class="sub-tab" onclick="showContent('lifo3')">Feature 3</div>
-          </div>
+        <div class="modal-buttons">
+          <button onclick="payOrders()">Pay Now</button>
+          <button onclick="closeModal()">Close</button>
         </div>
       </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <div class="header">
-        <h1 id="content-title">Dashboard</h1>
-      </div>
-
-      <div class="content-area" id="content-area">
-        <!-- Content will be dynamically loaded here -->
-        <p>Select a feature from the sidebar to get started.</p>
-      </div>
-    </div>
-
+    <!-- Script -->
     <script>
-      // Toggle tab visibility
-      function toggleTab(tabId) {
-        const tab = document.getElementById(`${tabId}-tabs`);
-        const header = event.currentTarget;
+      let orderType = "Dine-in";
+      let lastPanel = "Dashboard";
+      let currentTab = "all";
 
-        // Toggle active class on header
-        header.classList.toggle("active");
+      let stack = [];
+      let orders = [];
+      let total = 0;
 
-        // Toggle sub-tabs visibility
-        if (tab.style.maxHeight) {
-          tab.style.maxHeight = null;
-          header.querySelector(".arrow").textContent = "▼";
+      // Dashboard
+      const dashboardFrame = {
+        title: "Dashboard",
+        content: `
+        <div class="header">Welcome to Joe Bean's Cafe</div>
+        <div class="cards">
+          <div class="card"><h3>Best Seller</h3><p>Placeholder for best seller item.</p></div>
+          <div class="card"><h3>Sales Chart</h3><p>Placeholder for sales chart visualization.</p></div>
+        </div>
+      `,
+      };
+
+      // ORDER PANEL with TABS
+      const orderFrame = {
+        title: "ORDER PANEL",
+        content: `
+    <h1 class="header">Joe Bean Menu</h1>
+    <div class="order-container">
+      <div class="menu-section">
+        
+        <!-- Menu Tabs -->
+        <div class="menu-tabs">
+          <button class="active" onclick="filterMenu('all')">All</button>
+          <button onclick="filterMenu('croffle')">Croffle</button>
+          <button onclick="filterMenu('rice')">Rice Meal</button>
+          <button onclick="filterMenu('pasta')">Pasta & Fries</button>
+          <button onclick="filterMenu('extras')">Extras</button>
+          <button onclick="filterMenu('alacarte')">Ala Carte</button>
+          <button onclick="filterMenu('pizza')">Pizza</button>
+          <button onclick="filterMenu('hot')">Hot Drinks</button>
+          <button onclick="filterMenu('iced')">Iced Drinks</button>
+          <button onclick="filterMenu('new')">What's New</button>
+          <button onclick="filterMenu('frappe')">Frappe</button>
+          <button onclick="filterMenu('addons')">Add-ons</button>
+        </div>
+        
+        <!-- Croffle -->
+        <div class="menu-category" data-category="croffle">
+          <h2>🧇 Croffle</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><h3>Oreo Cream</h3><span>₱109</span><button onclick="addToOrder('Oreo Cream',109)">Add</button></div>
+            <div class="menu-item"><h3>Strawberry Cream</h3><span>₱109</span><button onclick="addToOrder('Strawberry Cream',109)">Add</button></div>
+            <div class="menu-item"><h3>Nutella</h3><span>₱109</span><button onclick="addToOrder('Nutella',109)">Add</button></div>
+            <div class="menu-item"><h3>Blueberry Cream</h3><span>₱109</span><button onclick="addToOrder('Blueberry Cream',109)">Add</button></div>
+            <div class="menu-item"><h3>Biscott Crumbs</h3><span>₱119</span><button onclick="addToOrder('Biscott Crumbs',119)">Add</button></div>
+            <div class="menu-item"><h3>Nutella Alcapones</h3><span>₱119</span><button onclick="addToOrder('Nutella Alcapones',119)">Add</button></div>
+            <div class="menu-item"><h3>Almond Biscoff</h3><span>₱129</span><button onclick="addToOrder('Almond Biscoff',129)">Add</button></div>
+          </div>
+        </div>
+
+        <!-- Rice Meal -->
+        <div class="menu-category" data-category="rice">
+          <h2>🍛 Rice Meal</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><h3>Hotsilog</h3><span>₱59</span><button onclick="addToOrder('Hotsilog',59)">Add</button></div>
+            <div class="menu-item"><h3>Siomaisilog</h3><span>₱69</span><button onclick="addToOrder('Siomaisilog',69)">Add</button></div>
+            <div class="menu-item"><h3>Hamsilog</h3><span>₱69</span><button onclick="addToOrder('Hamsilog',69)">Add</button></div>
+            <div class="menu-item"><h3>Embusilog</h3><span>₱69</span><button onclick="addToOrder('Embusilog',69)">Add</button></div>
+            <div class="menu-item"><h3>Bacsilog</h3><span>₱79</span><button onclick="addToOrder('Bacsilog',79)">Add</button></div>
+            <div class="menu-item"><h3>Pork Chaopan</h3><span>₱79</span><button onclick="addToOrder('Pork Chaopan',79)">Add</button></div>
+            <div class="menu-item"><h3>Spicy Pork Chaopan</h3><span>₱89</span><button onclick="addToOrder('Spicy Pork Chaopan',89)">Add</button></div>
+            <div class="menu-item"><h3>Spamsilog</h3><span>₱89</span><button onclick="addToOrder('Spamsilog',89)">Add</button></div>
+            <div class="menu-item"><h3>Cornbeefsilog</h3><span>₱89</span><button onclick="addToOrder('Cornbeefsilog',89)">Add</button></div>
+            <div class="menu-item"><h3>Nuggetssilog</h3><span>₱89</span><button onclick="addToOrder('Nuggetssilog',89)">Add</button></div>
+            <div class="menu-item"><h3>Tocilog</h3><span>₱89</span><button onclick="addToOrder('Tocilog',89)">Add</button></div>
+            <div class="menu-item"><h3>Longsilog</h3><span>₱89</span><button onclick="addToOrder('Longsilog',89)">Add</button></div>
+            <div class="menu-item"><h3>Skinlessilog</h3><span>₱99</span><button onclick="addToOrder('Skinlessilog',99)">Add</button></div>
+            <div class="menu-item"><h3>Beefy Burger Steak (NEW)</h3><span>₱99</span><button onclick="addToOrder('Beefy Burger Steak',99)">Add</button></div>
+            <div class="menu-item"><h3>Hungariansilog</h3><span>₱99</span><button onclick="addToOrder('Hungariansilog',99)">Add</button></div>
+            <div class="menu-item"><h3>Beef Tapsilog</h3><span>₱119</span><button onclick="addToOrder('Beef Tapsilog',119)">Add</button></div>
+            <div class="menu-item"><h3>Chicksilog (15 mins)</h3><span>₱119</span><button onclick="addToOrder('Chicksilog',119)">Add</button></div>
+            <div class="menu-item"><h3>Porksilog</h3><span>₱119</span><button onclick="addToOrder('Porksilog',119)">Add</button></div>
+            <div class="menu-item"><h3>Bangussilog</h3><span>₱119</span><button onclick="addToOrder('Bangussilog',119)">Add</button></div>
+            <div class="menu-item"><h3>Sisig Silog (NEW)</h3><span>₱119</span><button onclick="addToOrder('Sisig Silog',119)">Add</button></div>
+          </div>
+        </div>
+
+        <!-- Pasta & Fries -->
+        <div class="menu-category" data-category="pasta">
+          <h2>🍝 Pasta & Fries</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><h3>Creamy Tuna Pasta</h3><span>₱129</span><button onclick="addToOrder('Creamy Tuna Pasta',129)">Add</button></div>
+            <div class="menu-item"><h3>Spaghetti Pasta</h3><span>₱129</span><button onclick="addToOrder('Spaghetti Pasta',129)">Add</button></div>
+            <div class="menu-item"><h3>Carbonara</h3><span>₱129</span><button onclick="addToOrder('Carbonara',129)">Add</button></div>
+            <div class="menu-item"><h3>Spaghetti w/ Chicken</h3><span>₱194</span><button onclick="addToOrder('Spaghetti w/ Chicken',194)">Add</button></div>
+            <div class="menu-item"><h3>Cream Tuna Pasta w/ Chicken</h3><span>₱194</span><button onclick="addToOrder('Cream Tuna Pasta w/ Chicken',194)">Add</button></div>
+            <div class="menu-item"><h3>Plain Fries</h3><span>₱59</span><button onclick="addToOrder('Plain Fries',59)">Add</button></div>
+            <div class="menu-item"><h3>Flavored Fries (Cheese, BBQ/Que, Sour Cream)</h3><span>₱79</span><button onclick="addToOrder('Flavored Fries',79)">Add</button></div>
+          </div>
+        </div>
+
+        <!-- Extras -->
+        <div class="menu-category" data-category="extras">
+          <h2>🍳 Extra Order</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><h3>Cheese Sauce</h3><span>₱10</span><button onclick="addToOrder('Cheese Sauce',10)">Add</button></div>
+            <div class="menu-item"><h3>Sliced Cheese</h3><span>₱12</span><button onclick="addToOrder('Sliced Cheese',12)">Add</button></div>
+            <div class="menu-item"><h3>Egg</h3><span>₱15</span><button onclick="addToOrder('Egg',15)">Add</button></div>
+            <div class="menu-item"><h3>Plain Rice</h3><span>₱15</span><button onclick="addToOrder('Plain Rice',15)">Add</button></div>
+            <div class="menu-item"><h3>Fried Rice</h3><span>₱20</span><button onclick="addToOrder('Fried Rice',20)">Add</button></div>
+            <div class="menu-item"><h3>Hotdog</h3><span>₱25</span><button onclick="addToOrder('Hotdog',25)">Add</button></div>
+          </div>
+        </div>
+
+        <!-- Ala Carte -->
+        <div class="menu-category" data-category="alacarte">
+          <h2>🍴 Ala Carte</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><h3>Chapsuey (15 mins)</h3><span>₱119</span><button onclick="addToOrder('Chapsuey',119)">Add</button></div>
+            <div class="menu-item"><h3>Pancit Bihon (NEW, 15 mins)</h3><span>₱119</span><button onclick="addToOrder('Pancit Bihon',119)">Add</button></div>
+            <div class="menu-item"><h3>Pancit Canton Guisado (15 mins)</h3><span>₱119</span><button onclick="addToOrder('Pancit Canton Guisado',119)">Add</button></div>
+            <div class="menu-item"><h3>Sisig</h3><span>₱119</span><button onclick="addToOrder('Sisig',119)">Add</button></div>
+            <div class="menu-item"><h3>Sisig w/ Egg</h3><span>₱135</span><button onclick="addToOrder('Sisig w/ Egg',135)">Add</button></div>
+            <div class="menu-item"><h3>Chicken Wings (6pcs Original)</h3><span>₱169</span><button onclick="addToOrder('Chicken Wings Original',169)">Add</button></div>
+            <div class="menu-item"><h3>Chicken Wings (6pcs Buffalo)</h3><span>₱179</span><button onclick="addToOrder('Chicken Wings Buffalo',179)">Add</button></div>
+            <div class="menu-item"><h3>Chicken Wings (6pcs Cheese)</h3><span>₱189</span><button onclick="addToOrder('Chicken Wings Cheese',189)">Add</button></div>
+            <div class="menu-item"><h3>Hotdog on Stick</h3><span>₱25</span><button onclick="addToOrder('Hotdog on Stick',25)">Add</button></div>
+            <div class="menu-item"><h3>Siomai (4 pcs)</h3><span>₱29</span><button onclick="addToOrder('Siomai (4 pcs)',29)">Add</button></div>
+            <div class="menu-item"><h3>Hotdog Sandwich</h3><span>₱59</span><button onclick="addToOrder('Hotdog Sandwich',59)">Add</button></div>
+            <div class="menu-item"><h3>Egg Sandwich w/ Cheese</h3><span>₱69</span><button onclick="addToOrder('Egg Sandwich w/ Cheese',69)">Add</button></div>
+            <div class="menu-item"><h3>Hungarian Sandwich</h3><span>₱89</span><button onclick="addToOrder('Hungarian Sandwich',89)">Add</button></div>
+            <div class="menu-item"><h3>Clubhouse Sandwich</h3><span>₱99</span><button onclick="addToOrder('Clubhouse Sandwich',99)">Add</button></div>
+            <div class="menu-item"><h3>Nachos (Good for 2)</h3><span>₱119</span><button onclick="addToOrder('Nachos',119)">Add</button></div>
+            <div class="menu-item"><h3>Onion Rings (10 mins)</h3><span>₱119</span><button onclick="addToOrder('Onion Rings',119)">Add</button></div>
+            <div class="menu-item"><h3>Spam Fries (NEW)</h3><span>₱149</span><button onclick="addToOrder('Spam Fries',149)">Add</button></div>
+          </div>
+        </div>
+
+        <!-- Pizza -->
+        <div class="menu-category" data-category="pizza">
+          <h2>🍕 Pizza Barkada</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><h3>Ham and Cheese</h3><span>₱169</span><button onclick="addToOrder('Ham and Cheese Pizza',169)">Add</button></div>
+            <div class="menu-item"><h3>Hawaiian</h3><span>₱179</span><button onclick="addToOrder('Hawaiian Pizza',179)">Add</button></div>
+            <div class="menu-item"><h3>Pepperoni</h3><span>₱199</span><button onclick="addToOrder('Pepperoni Pizza',199)">Add</button></div>
+            <div class="menu-item"><h3>Overload</h3><span>₱219</span><button onclick="addToOrder('Overload Pizza',219)">Add</button></div>
+          </div>
+        </div>
+
+        <!-- HOT DRINKS -->
+        <div class="menu-category" data-category="hot">
+          <h2>☕ HOT DRINKS</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><img src="img/Americano.jpg" alt="Americano"><h3>Americano</h3><span>₱69</span><button onclick="addToOrder('Americano',69)">Add</button></div>
+            <div class="menu-item"><img src="img/Latte.jpg" alt="Latte"><h3>Latte</h3><span>₱79</span><button onclick="addToOrder('Latte',79)">Add</button></div>
+            <div class="menu-item"><img src="img/SpanishLatte.jpg" alt="Spanish Latte"><h3>Spanish Latte</h3><span>₱89</span><button onclick="addToOrder('Spanish Latte',89)">Add</button></div>
+            <div class="menu-item"><img src="img/MochaLatte.jpg" alt="Mocha Latte"><h3>Mocha Latte</h3><span>₱89</span><button onclick="addToOrder('Mocha Latte',89)">Add</button></div>
+            <div class="menu-item"><img src="img/VanillaLatte.jpg" alt="Vanilla Latte"><h3>Vanilla Latte</h3><span>₱89</span><button onclick="addToOrder('Vanilla Latte',89)">Add</button></div>
+            <div class="menu-item"><img src="img/HazelnutLatte.jpg" alt="Hazelnut Latte"><h3>Hazelnut Latte</h3><span>₱89</span><button onclick="addToOrder('Hazelnut Latte',89)">Add</button></div>
+            <div class="menu-item"><img src="img/CaramelLatte.jpg" alt="Caramel Latte"><h3>Caramel Latte</h3><span>₱89</span><button onclick="addToOrder('Caramel Latte',89)">Add</button></div>
+            <div class="menu-item"><img src="img/Chocolate.jpg" alt="Chocolate"><h3>Chocolate</h3><span>₱89</span><button onclick="addToOrder('Chocolate',89)">Add</button></div>
+            <div class="menu-item"><img src="img/MilkyMatcha.jpg" alt="Milky Matcha"><h3>Milky Matcha</h3><span>₱99</span><button onclick="addToOrder('Milky Matcha',99)">Add</button></div>
+          </div>
+        </div>
+
+        <!-- ICED DRINKS -->
+        <div class="menu-category" data-category="iced">
+          <h2>🧊 ICED DRINKS</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><img src="img/IcedAmericano.jpg" alt="Iced Americano"><h3>Iced Americano</h3><select id="size-iced-americano"><option value="Grande-59">Grande ₱59</option><option value="Venti-69">Venti ₱69</option></select><button onclick="addSizeToOrder('Iced Americano','size-iced-americano')">Add</button></div>
+            <div class="menu-item"><img src="img/IcedLatte.jpg" alt="Iced Latte"><h3>Iced Latte</h3><select id="size-iced-latte"><option value="Grande-69">Grande ₱69</option><option value="Venti-79">Venti ₱79</option></select><button onclick="addSizeToOrder('Iced Latte','size-iced-latte')">Add</button></div>
+            <div class="menu-item"><img src="img/SpanishLatteIced.jpg" alt="Spanish Latte Iced"><h3>Spanish Latte Iced</h3><select id="size-iced-spanish"><option value="Grande-79">Grande ₱79</option><option value="Venti-89">Venti ₱89</option></select><button onclick="addSizeToOrder('Spanish Latte Iced','size-iced-spanish')">Add</button></div>
+            <div class="menu-item"><img src="img/VanillaLatteIced.jpg" alt="Vanilla Latte Iced"><h3>Vanilla Latte Iced</h3><select id="size-iced-vanilla"><option value="Grande-79">Grande ₱79</option><option value="Venti-89">Venti ₱89</option></select><button onclick="addSizeToOrder('Vanilla Latte Iced','size-iced-vanilla')">Add</button></div>
+            <div class="menu-item"><img src="img/HazelnutLatteIced.jpg" alt="Hazelnut Latte Iced"><h3>Hazelnut Latte Iced</h3><select id="size-iced-hazelnut"><option value="Grande-79">Grande ₱79</option><option value="Venti-89">Venti ₱89</option></select><button onclick="addSizeToOrder('Hazelnut Latte Iced','size-iced-hazelnut')">Add</button></div>
+            <div class="menu-item"><img src="img/CaramelMacchiatoIced.jpg" alt="Caramel Macchiato Iced"><h3>Caramel Macchiato Iced</h3><select id="size-iced-caramel"><option value="Grande-89">Grande ₱89</option><option value="Venti-99">Venti ₱99</option></select><button onclick="addSizeToOrder('Caramel Macchiato Iced','size-iced-caramel')">Add</button></div>
+            <div class="menu-item"><img src="img/DarkMochaIced.jpg" alt="Dark Mocha Iced"><h3>Dark Mocha Iced</h3><select id="size-iced-darkmocha"><option value="Grande-89">Grande ₱89</option><option value="Venti-99">Venti ₱99</option></select><button onclick="addSizeToOrder('Dark Mocha Iced','size-iced-darkmocha')">Add</button></div>
+            <div class="menu-item"><img src="img/DirtyMatchaIced.jpg" alt="Dirty Matcha Iced"><h3>Dirty Matcha Iced</h3><select id="size-iced-dirtymatcha"><option value="Grande-89">Grande ₱89</option><option value="Venti-99">Venti ₱99</option></select><button onclick="addSizeToOrder('Dirty Matcha Iced','size-iced-dirtymatcha')">Add</button></div>
+            <div class="menu-item"><img src="img/LavaMochaIced.jpg" alt="Lava Mocha Iced"><h3>Lava Mocha Iced</h3><select id="size-iced-lavamocha"><option value="Grande-99">Grande ₱99</option><option value="Venti-109">Venti ₱109</option></select><button onclick="addSizeToOrder('Lava Mocha Iced','size-iced-lavamocha')">Add</button></div>
+            <div class="menu-item"><img src="img/BiscoffLatteIced.jpg" alt="Biscoff Latte Iced"><h3>Biscoff Latte Iced</h3><select id="size-iced-biscoff"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Biscoff Latte Iced','size-iced-biscoff')">Add</button></div>
+            <div class="menu-item"><img src="img/BlueberryMilk.jpg" alt="Blueberry Milk"><h3>Blueberry Milk</h3><select id="size-iced-blueberry"><option value="Grande-89">Grande ₱89</option><option value="Venti-99">Venti ₱99</option></select><button onclick="addSizeToOrder('Blueberry Milk','size-iced-blueberry')">Add</button></div>
+            <div class="menu-item"><img src="img/DarkChoco.jpg" alt="Dark Choco"><h3>Dark Choco</h3><select id="size-iced-darkchoco"><option value="Grande-89">Grande ₱89</option><option value="Venti-99">Venti ₱99</option></select><button onclick="addSizeToOrder('Dark Choco','size-iced-darkchoco')">Add</button></div>
+            <div class="menu-item"><img src="img/MilkyMatchaIced.jpg" alt="Milky Matcha Iced"><h3>Milky Matcha Iced</h3><select id="size-iced-milky"><option value="Grande-89">Grande ₱89</option><option value="Venti-99">Venti ₱99</option></select><button onclick="addSizeToOrder('Milky Matcha Iced','size-iced-milky')">Add</button></div>
+            <div class="menu-item"><img src="img/StrawberryMilkIced.jpg" alt="Strawberry Milk Iced"><h3>Strawberry Milk Iced</h3><select id="size-iced-strawberry"><option value="Grande-89">Grande ₱89</option><option value="Venti-99">Venti ₱99</option></select><button onclick="addSizeToOrder('Strawberry Milk Iced','size-iced-strawberry')">Add</button></div>
+            <div class="menu-item"><img src="img/OreoMatcha.jpg" alt="Oreo Matcha"><h3>Oreo Matcha</h3><select id="size-iced-oreo"><option value="Grande-109">Grande ₱109</option><option value="Venti-119">Venti ₱119</option></select><button onclick="addSizeToOrder('Oreo Matcha','size-iced-oreo')">Add</button></div>
+            <div class="menu-item"><img src="img/MilkyOreo.jpg" alt="Milky Oreo"><h3>Milky Oreo</h3><select id="size-iced-milkyoreo"><option value="Grande-109">Grande ₱109</option><option value="Venti-119">Venti ₱119</option></select><button onclick="addSizeToOrder('Milky Oreo','size-iced-milkyoreo')">Add</button></div>
+            <div class="menu-item"><img src="img/ChocoIchigo.jpg" alt="Choco Ichigo"><h3>Choco Ichigo</h3><select id="size-iced-chocoichigo"><option value="Grande-109">Grande ₱109</option><option value="Venti-119">Venti ₱119</option></select><button onclick="addSizeToOrder('Choco Ichigo','size-iced-chocoichigo')">Add</button></div>
+            <div class="menu-item"><img src="img/StrawberryMatcha.jpg" alt="Strawberry Matcha"><h3>Strawberry Matcha</h3><select id="size-iced-strawberrymatcha"><option value="Grande-109">Grande ₱109</option><option value="Venti-119">Venti ₱119</option></select><button onclick="addSizeToOrder('Strawberry Matcha','size-iced-strawberrymatcha')">Add</button></div>
+          </div>
+        </div>
+
+        <!-- WHAT'S NEW -->
+        <div class="menu-category" data-category="new">
+          <h2>✨ WHAT'S NEW?</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><img src="img/HazelnutMocha.jpg" alt="Hazelnut Mocha"><h3>Hazelnut Mocha</h3><select id="size-new-hazelnutmocha"><option value="Grande-109">Grande ₱109</option><option value="Venti-119">Venti ₱119</option></select><button onclick="addSizeToOrder('Hazelnut Mocha','size-new-hazelnutmocha')">Add</button></div>
+            <div class="menu-item"><img src="img/SaltedCaramel.jpg" alt="Salted Caramel"><h3>Salted Caramel</h3><select id="size-new-caramel"><option value="Grande-109">Grande ₱109</option><option value="Venti-119">Venti ₱119</option></select><button onclick="addSizeToOrder('Salted Caramel','size-new-caramel')">Add</button></div>
+            <div class="menu-item"><img src="img/MiloDino.jpg" alt="Milo Dino"><h3>Milo Dino</h3><select id="size-new-milodino"><option value="Grande-109">Grande ₱109</option><option value="Venti-119">Venti ₱119</option></select><button onclick="addSizeToOrder('Milo Dino','size-new-milodino')">Add</button></div>
+            <div class="menu-item"><img src="img/WhiteMocha.jpg" alt="White Mocha"><h3>White Mocha</h3><select id="size-new-whitemocha"><option value="Grande-109">Grande ₱109</option><option value="Venti-119">Venti ₱119</option></select><button onclick="addSizeToOrder('White Mocha','size-new-whitemocha')">Add</button></div>
+            <div class="menu-item"><img src="img/SeasaltLatte.jpg" alt="Seasalt Latte"><h3>Seasalt Latte</h3><select id="size-new-seasalt"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Seasalt Latte','size-new-seasalt')">Add</button></div>
+          </div>
+        </div>
+
+        <!-- FRAPPE -->
+        <div class="menu-category" data-category="frappe">
+          <h2>🥤 FRAPPE</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><img src="img/CaramelMacchiatoFrappe.jpg" alt="Caramel Macchiato Frappe"><h3>Caramel Macchiato Frappe</h3><select id="size-frappe-caramelmacchiato"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Caramel Macchiato Frappe','size-frappe-caramelmacchiato')">Add</button></div>
+            <div class="menu-item"><img src="img/VanillaFrappe.jpg" alt="Vanilla Frappe"><h3>Vanilla Frappe</h3><select id="size-frappe-vanilla"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Vanilla Frappe','size-frappe-vanilla')">Add</button></div>
+            <div class="menu-item"><img src="img/HazelnutFrappe.jpg" alt="Hazelnut Frappe"><h3>Hazelnut Frappe</h3><select id="size-frappe-hazelnut"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Hazelnut Frappe','size-frappe-hazelnut')">Add</button></div>
+            <div class="menu-item"><img src="img/MochaFrappe.jpg" alt="Mocha Frappe"><h3>Mocha Frappe</h3><select id="size-frappe-mocha"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Mocha Frappe','size-frappe-mocha')">Add</button></div>
+            <div class="menu-item"><img src="img/BiscoffFrappe.jpg" alt="Biscoff Frappe"><h3>Biscoff Frappe</h3><select id="size-frappe-biscoff"><option value="Grande-149">Grande ₱149</option><option value="Venti-159">Venti ₱159</option></select><button onclick="addSizeToOrder('Biscoff Frappe','size-frappe-biscoff')">Add</button></div>
+            <div class="menu-item"><img src="img/ChocoChipFrappe.jpg" alt="Choco Chip Frappe"><h3>Choco Chip Frappe</h3><select id="size-frappe-chocochip"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Choco Chip Frappe','size-frappe-chocochip')">Add</button></div>
+            <div class="menu-item"><img src="img/MilkyMatchaFrappe.jpg" alt="Milky Matcha Frappe"><h3>Milky Matcha Frappe</h3><select id="size-frappe-milky"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Milky Matcha Frappe','size-frappe-milky')">Add</button></div>
+            <div class="menu-item"><img src="img/StrawberryMilkFrappe.jpg" alt="Strawberry Milk Frappe"><h3>Strawberry Milk Frappe</h3><select id="size-frappe-strawberry"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Strawberry Milk Frappe','size-frappe-strawberry')">Add</button></div>
+            <div class="menu-item"><img src="img/MiloMadnessFrappe.jpg" alt="Milo Madness Frappe"><h3>Milo Madness Frappe</h3><select id="size-frappe-milo"><option value="Grande-119">Grande ₱119</option><option value="Venti-129">Venti ₱129</option></select><button onclick="addSizeToOrder('Milo Madness Frappe','size-frappe-milo')">Add</button></div>
+            <div class="menu-item"><img src="img/MilkyOreoFrappe.jpg" alt="Milky Oreo Frappe"><h3>Milky Oreo Frappe</h3><select id="size-frappe-milkyoreo"><option value="Grande-129">Grande ₱129</option><option value="Venti-139">Venti ₱139</option></select><button onclick="addSizeToOrder('Milky Oreo Frappe','size-frappe-milkyoreo')">Add</button></div>
+            <div class="menu-item"><img src="img/ChocoIchigoFrappe.jpg" alt="Choco Ichigo Frappe"><h3>Choco Ichigo Frappe</h3><select id="size-frappe-chocoichigo"><option value="Grande-129">Grande ₱129</option><option value="Venti-139">Venti ₱139</option></select><button onclick="addSizeToOrder('Choco Ichigo Frappe','size-frappe-chocoichigo')">Add</button></div>
+          </div>
+        </div>
+
+        <!-- ADD-ONS -->
+        <div class="menu-category" data-category="addons">
+          <h2>➕ ADD-ONS</h2>
+          <div class="menu-grid">
+            <div class="menu-item"><img src="img/EspressoShot.jpg" alt="Espresso Shot"><h3>Espresso Shot</h3><span>₱15</span><button onclick="addToOrder('Espresso Shot',15)">Add</button></div>
+            <div class="menu-item"><img src="img/Biscoff.jpg" alt="Biscoff"><h3>Biscoff</h3><span>₱30</span><button onclick="addToOrder('Biscoff',30)">Add</button></div>
+            <div class="menu-item"><img src="img/Strawberry.jpg" alt="Strawberry"><h3>Strawberry</h3><span>₱20</span><button onclick="addToOrder('Strawberry',20)">Add</button></div>
+            <div class="menu-item"><img src="img/Blueberry.jpg" alt="Blueberry"><h3>Blueberry</h3><span>₱20</span><button onclick="addToOrder('Blueberry',20)">Add</button></div>
+            <div class="menu-item"><img src="img/Oreo.jpg" alt="Oreo"><h3>Oreo</h3><span>₱20</span><button onclick="addToOrder('Oreo',20)">Add</button></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- History Section -->
+      <div class="history-section">
+        <h2>🛒 Order History</h2>
+        <ul id="order-history"></ul>
+        <p><strong>Total: ₱<span id="total-amount">0</span></strong></p>
+        <div style="margin: 10px 0;">
+          <label>
+            <input type="radio" name="order-type" value="Dine-in" onchange="setOrderType(this.value)" checked>
+            Dine-in
+          </label>
+          <label style="margin-left: 10px;">
+            <input type="radio" name="order-type" value="Takeout" onchange="setOrderType(this.value)">
+            Takeout
+          </label>
+        </div>
+        <button onclick="viewOrders()">View</button>
+      </div>
+    </div>
+  `,
+      };
+
+      // Queue
+      const queueFrame = {
+        title: "QUEUE PANEL",
+        content: `<h2>Order Queue</h2>`,
+      };
+
+      // Sales
+      const salesFrame = {
+        title: "SALES PANEL",
+        content: `<h2>Sales Summary</h2>`,
+      };
+
+      // Functions
+      function openPanel(panelName) {
+        let frame;
+        if (panelName === "ORDER") frame = orderFrame;
+        else if (panelName === "QUEUE") frame = queueFrame;
+        else if (panelName === "SALES") frame = salesFrame;
+
+        if (panelName === "ORDER" && lastPanel === "Dashboard") {
+          orders = [];
+        }
+
+        stack.push(frame);
+        showFrame(frame);
+        updateUIForPanel();
+        lastPanel = frame.title;
+      }
+
+      function goBack() {
+        if (stack.length > 1) {
+          const currentFrame = stack.pop();
+          const prevFrame = stack[stack.length - 1];
+
+          if (currentFrame.title === "ORDER PANEL") {
+            orders = [];
+          }
+
+          showFrame(prevFrame);
+
+          const dineInRadio = document.querySelector(
+            'input[name="order-type"][value="Dine-in"]'
+          );
+          const takeoutRadio = document.querySelector(
+            'input[name="order-type"][value="Takeout"]'
+          );
+          if (dineInRadio && takeoutRadio) {
+            if (orderType === "Dine-in") dineInRadio.checked = true;
+            if (orderType === "Takeout") takeoutRadio.checked = true;
+          }
+
+          if (prevFrame.title === "Dashboard") {
+            updateUIForDashboard();
+            updateOrderHistory();
+          }
         } else {
-          tab.style.maxHeight = tab.scrollHeight + "px";
-          header.querySelector(".arrow").textContent = "▲";
+          stack = [dashboardFrame];
+          showFrame(dashboardFrame);
+          updateUIForDashboard();
+          orders = [];
+          updateOrderHistory();
         }
       }
 
-      // Show content based on selection
-      function showContent(contentId) {
-        const contentArea = document.getElementById("content-area");
-        const title = document.getElementById("content-title");
+      function showFrame(frame) {
+        document.getElementById("mainContent").innerHTML = frame.content;
+        document.getElementById("panelTitle").innerText = frame.title;
 
-        // Remove active class from all sub-tabs
-        document.querySelectorAll(".sub-tab").forEach((tab) => {
-          tab.classList.remove("active");
-        });
+        // Show all categories by default
+        if (frame.title === "ORDER PANEL") {
+          filterMenu("all");
+        }
 
-        // Add active class to selected sub-tab
-        event.currentTarget.classList.add("active");
-
-        // Update title
-        const [method, feature] = contentId.match(/(fifo|lifo)(\d+)/i).slice(1);
-        title.textContent = `${method.toUpperCase()} - Feature ${feature}`;
-
-        // Generate dynamic content based on selection
-        let content = `
-                <h2>${method.toUpperCase()} - Feature ${feature}</h2>
-                <div class="order-form">
-                    <div class="form-group">
-                        <label for="order-${contentId}">Order Item</label>
-                        <input type="text" id="order-${contentId}" placeholder="Enter item name">
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity-${contentId}">Quantity</label>
-                        <input type="number" id="quantity-${contentId}" min="1" value="1">
-                    </div>
-                    <div class="form-group">
-                        <label>&nbsp;</label>
-                        <button class="btn btn-primary" onclick="addOrder('${method}')">Add Order</button>
-                    </div>
-                </div>
-                <div class="order-list" id="order-list-${method}">
-                    <div class="order-list-header">
-                        <div>Item</div>
-                        <div>Quantity</div>
-                        <div>Time</div>
-                        <div>Action</div>
-                    </div>
-                    <!-- Orders will be added here -->
-                </div>
-            `;
-
-        contentArea.innerHTML = content;
+        updateOrderHistory();
       }
 
-      // Add order to the list
-      function addOrder(method) {
-        const itemInput = document.querySelector(`#order-${method}1`);
-        const quantityInput = document.querySelector(`#quantity-${method}1`);
-        const orderList = document.getElementById(`order-list-${method}`);
+      function updateUIForPanel() {
+        document.getElementById("sidebar").style.display = "none";
+        document.getElementById("topbar").style.display = "flex";
+      }
 
-        if (!itemInput.value.trim()) {
-          alert("Please enter an item name");
+      function updateUIForDashboard() {
+        document.getElementById("sidebar").style.display = "flex";
+        document.getElementById("topbar").style.display = "none";
+      }
+
+      // Filter menu by category
+      function filterMenu(category) {
+        currentTab = category;
+
+        // Update active tab button
+        const tabButtons = document.querySelectorAll(".menu-tabs button");
+        tabButtons.forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+
+        // Show/hide categories
+        const categories = document.querySelectorAll(".menu-category");
+        categories.forEach((cat) => {
+          if (category === "all") {
+            cat.classList.add("active");
+          } else if (cat.dataset.category === category) {
+            cat.classList.add("active");
+          } else {
+            cat.classList.remove("active");
+          }
+        });
+      }
+
+      // Load dashboard
+      showFrame(dashboardFrame);
+      updateUIForDashboard();
+
+      function addToOrder(item, price) {
+        const existing = orders.find((o) => o.item === item);
+        if (existing) {
+          existing.qty++;
+          existing.total += price;
+        } else {
+          orders.push({ item, price, qty: 1, total: price });
+        }
+        updateOrderHistory();
+      }
+
+      function decrementOrder(index) {
+        if (orders[index]) {
+          orders[index].qty--;
+          orders[index].total -= orders[index].price;
+
+          if (orders[index].qty <= 0) {
+            orders.splice(index, 1);
+          }
+          updateOrderHistory();
+        }
+      }
+
+      function removeOrder(index) {
+        if (orders[index]) {
+          orders.splice(index, 1);
+          updateOrderHistory();
+        }
+      }
+
+      function addSizeToOrder(productName, selectId) {
+        const select = document.getElementById(selectId).value;
+        const [size, price] = select.split("-");
+        addToOrder(`${productName} (${size})`, parseInt(price));
+      }
+
+      function setOrderType(value) {
+        orderType = value;
+      }
+
+      function updateOrderHistory() {
+        const list = document.getElementById("order-history");
+        const totalEl = document.getElementById("total-amount");
+        if (!list || !totalEl) return;
+
+        list.innerHTML = "";
+        total = 0;
+
+        orders.forEach((o, index) => {
+          total += o.total;
+
+          const li = document.createElement("li");
+          li.style.display = "flex";
+          li.style.justifyContent = "space-between";
+          li.style.alignItems = "center";
+          li.style.marginBottom = "8px";
+
+          li.innerHTML = `
+            <span>${o.item} (x${o.qty}) - ₱${o.total}</span>
+            <div>
+              <button onclick="decrementOrder(${index})" style="
+                background:#a0522d; color:#fff; border:none; padding:4px 8px; 
+                border-radius:4px; cursor:pointer; margin-right:4px;">−</button>
+              <button onclick="removeOrder(${index})" style="
+                background:#b22222; color:#fff; border:none; padding:4px 8px; 
+                border-radius:4px; cursor:pointer;">🗑</button>
+            </div>
+          `;
+          list.appendChild(li);
+        });
+
+        totalEl.innerText = total;
+      }
+
+      function viewOrders() {
+        const modal = document.getElementById("orderModal");
+        const modalList = document.getElementById("modal-order-list");
+        const modalTotal = document.getElementById("modal-total");
+
+        modalList.innerHTML = "";
+        let modalSum = 0;
+
+        orders.forEach((o) => {
+          const li = document.createElement("li");
+          li.textContent = `${o.item} x${o.qty} - ₱${o.total}`;
+          modalList.appendChild(li);
+          modalSum += o.total;
+        });
+
+        modalTotal.textContent = modalSum;
+        document.getElementById("payment-amount").value = "";
+        document.getElementById("payment-error").style.display = "none";
+
+        modal.style.display = "flex";
+      }
+
+      function closeModal() {
+        document.getElementById("orderModal").style.display = "none";
+      }
+
+      function payOrders() {
+        const paymentInput = document.getElementById("payment-amount");
+        const paymentError = document.getElementById("payment-error");
+        const modalTotal = parseFloat(
+          document.getElementById("modal-total").textContent
+        );
+
+        const payment = parseFloat(paymentInput.value);
+        if (isNaN(payment) || payment < modalTotal) {
+          paymentError.style.display = "block";
           return;
         }
 
-        const now = new Date();
-        const timeString = now.toLocaleTimeString();
+        paymentError.style.display = "none";
+        const change = payment - modalTotal;
+        alert(
+          `✅ Payment Successful!\nTotal: ₱${modalTotal}\nPayment: ₱${payment}\nChange: ₱${change}`
+        );
 
-        const orderItem = document.createElement("div");
-        orderItem.className = "order-item";
-        orderItem.innerHTML = `
-                <div>${itemInput.value}</div>
-                <div>${quantityInput.value}</div>
-                <div>${timeString}</div>
-                <div><button class="btn" onclick="processOrder(this, '${method}')">Process</button></div>
-            `;
-
-        if (method === "fifo") {
-          orderList.appendChild(orderItem);
-        } else {
-          // For LIFO, insert at the beginning
-          const firstItem = orderList.querySelector(".order-item");
-          if (firstItem) {
-            orderList.insertBefore(orderItem, firstItem);
-          } else {
-            orderList.appendChild(orderItem);
-          }
-        }
-
-        // Clear inputs
-        itemInput.value = "";
-        quantityInput.value = "1";
+        orders = [];
+        updateOrderHistory();
+        closeModal();
       }
 
-      // Process order (FIFO or LIFO)
-      function processOrder(button, method) {
-        const orderItem = button.closest(".order-item");
-        const itemName = orderItem.querySelector("div:first-child").textContent;
-
-        // Here you would typically send this to your backend
-        alert(`Processing ${method.toUpperCase()} order: ${itemName}`);
-
-        // Remove the processed order
-        orderItem.remove();
-
-        // Show a message if no more orders
-        const orderList = document.getElementById(`order-list-${method}`);
-        if (orderList.querySelectorAll(".order-item").length === 0) {
-          orderList.innerHTML += `
-                    <div class="order-item" style="text-align: center; grid-column: 1 / -1; padding: 20px;">
-                        No orders in the queue
-                    </div>
-                `;
+      window.onclick = function (event) {
+        const modal = document.getElementById("orderModal");
+        if (event.target === modal) {
+          closeModal();
         }
-      }
+      };
 
-      // Initialize the first tab as open by default
-      document.addEventListener("DOMContentLoaded", function () {
-        const fifoTab = document.querySelector(".tab-header");
-        const fifoTabs = document.getElementById("fifo-tabs");
-        fifoTab.classList.add("active");
-        fifoTabs.style.maxHeight = fifoTabs.scrollHeight + "px";
-      });
+      // Load dashboard
+      stack.push(dashboardFrame);
+      showFrame(dashboardFrame);
+      updateUIForDashboard();
     </script>
   </body>
 </html>
